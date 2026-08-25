@@ -3,8 +3,8 @@
   "version": "1.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3111",
-    "build": "next build",
+    "dev": "node api.js && next dev -p 3111",
+    "build": "node api.js && next build",
     "app": "tauri dev",
     "app:build": "tauri build"
   },
