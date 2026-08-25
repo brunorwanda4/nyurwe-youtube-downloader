@@ -1,0 +1,37 @@
+[package]
+name = "ytgrab"
+version = "1.1.0"
+description = "A private desktop video and audio downloader"
+edition = "2021"
+rust-version = "1.77.2"
+
+[lib]
+name = "ytgrab_lib"
+# YtGrab ships as a Windows desktop app. The C-compatible library targets are
+# only needed by Tauri mobile builds and make MSVC create a second, very large
+# debug PDB/DLL on Windows.
+crate-type = ["rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-dialog = "2"
+tauri-plugin-opener = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+reqwest = { version = "0.12", default-features = false, features = ["blocking", "rustls-tls"] }
+zip = { version = "2.2", default-features = false, features = ["deflate"] }
+
+[profile.dev]
+# Keep development builds small enough for machines with limited disk space.
+# Source-level debugging can be re-enabled locally by removing this override.
+debug = 0
+incremental = false
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true
