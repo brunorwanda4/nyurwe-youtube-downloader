@@ -3,6 +3,5 @@
 import { Scene } from "./scene";
 
 export function StartupScreen() {
-  return (<Scene />
-  );
+  return (<Scene />);
 }
