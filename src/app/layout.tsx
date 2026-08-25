@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "YtGrab — Keep the videos worth keeping",
-  description: "A private desktop downloader for saving video, audio, and playlists.",
+  title: "Nyurwe — YouTube Downloader",
+  description: "A private desktop downloader for videos you own or have permission to save.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
