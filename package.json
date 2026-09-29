@@ -3,7 +3,7 @@
   "version": "1.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3111",
+    "dev": "next dev -p 3119",
     "build": "next build",
     "app": "tauri dev",
     "app:build": "tauri build"

@@ -37,10 +37,10 @@ export function DownloadCard({
   format, onStart, onStop,
 }: DownloadCardProps) {
   return (
-    <section className="stone-card download-stone" aria-label="Download a YouTube video">
+    <section className="card glass liquid-glass-card download-stone" aria-label="Download a YouTube video">
       <Botanicals className="card-botanicals top-growth" />
       <div className="card-symbol"><YoutubeLogo size={32} weight="fill" /></div>
-      <div className={`engine-chip ${missingTools ? "warning" : ""}`}><span />{engineLabel}</div>
+      <div className={`badge badge-sm badge-outline engine-chip ${missingTools ? "warning" : ""}`}><span />{engineLabel}</div>
 
       {!desktop && (
         <p className="desktop-note">
@@ -49,15 +49,15 @@ export function DownloadCard({
       )}
 
       {missingTools && (
-        <div className="setup-panel">
+        <div className="alert alert-soft setup-panel">
           <div><strong>One-time setup</strong><span>Install yt-dlp, FFmpeg, and Deno privately.</span></div>
-          <button type="button" onClick={onSetupTools} disabled={settingUp}>{settingUp ? "Setting up…" : "Set up"}</button>
+          <button className="btn btn-sm" type="button" onClick={onSetupTools} disabled={settingUp}>{settingUp ? "Setting up…" : "Set up"}</button>
         </div>
       )}
 
       <form onSubmit={onStart}>
         <label className="sr-only" htmlFor="media-url">YouTube link</label>
-        <div className="river-input">
+        <div className="input input-lg river-input">
           <LinkSimple size={22} weight="bold" />
           <input
             id="media-url"
@@ -70,13 +70,13 @@ export function DownloadCard({
             autoComplete="url"
           />
           {url && !running && (
-            <button type="button" onClick={() => onUrlChange("")} aria-label="Clear YouTube link"><X size={17} weight="bold" /></button>
+            <button className="btn btn-ghost btn-circle btn-sm" type="button" onClick={() => onUrlChange("")} aria-label="Clear YouTube link"><X size={17} weight="bold" /></button>
           )}
         </div>
 
         <div className="download-utilities">
           <button
-            className="folder-control"
+            className="btn btn-ghost btn-sm folder-control"
             type="button"
             onClick={onPickFolder}
             disabled={running || !desktop}
@@ -86,22 +86,22 @@ export function DownloadCard({
             <span>{folder ? folder.split(/[\/]/).pop() : desktop ? "Choose folder" : "Downloads folder"}</span>
           </button>
           {desktop && toolsChecked && !missingTools && (
-            <button className="engine-update" type="button" onClick={onSetupTools} disabled={settingUp || running}>
+            <button className="btn btn-ghost btn-sm engine-update" type="button" onClick={onSetupTools} disabled={settingUp || running}>
               {settingUp ? <CircleNotch className="spin" size={16} /> : <Leaf size={16} weight="fill" />}
               {settingUp ? setupText || "Updating…" : `Engine ${engineVersion || "installed"}`}
             </button>
           )}
         </div>
 
-        {error && <div className="forest-error" role="alert"><WarningCircle size={18} weight="fill" />{error}</div>}
+        {error && <div className="alert alert-error alert-soft forest-error" role="alert"><WarningCircle size={18} weight="fill" />{error}</div>}
 
         {running ? (
-          <button className="moss-button running" type="button" onClick={onStop} style={{ "--download-progress": `${percent}%` } as CSSProperties}>
+          <button className="btn btn-block moss-button running" type="button" onClick={onStop} style={{ "--download-progress": `${percent}%` } as CSSProperties}>
             <span className="button-progress" aria-hidden="true" />
             <span className="button-label"><Stop size={20} weight="fill" /> Stop • {progressLabel}</span>
           </button>
         ) : (
-          <button className="moss-button" type="submit" disabled={!canDownload}>
+          <button className="btn btn-block moss-button" type="submit" disabled={!canDownload}>
             <span className="youtube-seed" aria-hidden="true" />
             Download {format.mode === "audio" ? "audio" : "video"}
             <DownloadSimple size={21} weight="bold" />

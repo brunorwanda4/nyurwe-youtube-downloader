@@ -1,7 +1,38 @@
-node_modules
-.next
-out
-src-tauri/target
-src-tauri/gen
-*.log
+# Dependencies
+node_modules/
+
+# Framework and build output
+.next/
+out/
+dist/
+build/
+coverage/
+src-tauri/target/
+src-tauri/gen/
+
+# Generated code and compiled assets
+generated/
+**/__generated__/
+*.generated.*
+*.gen.*
+*.min.css
+*.min.js
+*.css.map
+*.js.map
+*.d.ts.map
+
+# Tool caches
+.cache/
+.parcel-cache/
+.turbo/
+.eslintcache
 *.tsbuildinfo
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# Operating-system files
+.DS_Store
+Thumbs.db

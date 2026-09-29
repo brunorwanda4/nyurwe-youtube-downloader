@@ -3,7 +3,6 @@
 import { Scene } from "@/src/components/scene";
 import { StartupScreen } from "@/src/components/startup-screen";
 import { ForestNav } from "@/src/components/forest-nav";
-import { ForestHero } from "@/src/components/forest-hero";
 import { DownloadCard } from "@/src/components/download-card";
 import { PreviewCard } from "@/src/components/preview-card";
 import { ProgressPanel } from "@/src/components/progress-panel";
@@ -27,8 +26,6 @@ export default function Home() {
 
         {app.activeView === "download" ? (
           <div className="forest-workspace">
-            <ForestHero />
-
             <div className="download-column">
               <DownloadCard
                 desktop={app.desktop}
