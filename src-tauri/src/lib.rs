@@ -61,6 +61,17 @@ struct Tools {
     deno: Option<String>,
 }
 
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct MediaInfo {
+    title: String,
+    channel: String,
+    duration: u64,
+    thumbnail: String,
+    is_playlist: bool,
+    available_heights: Vec<u32>,
+}
+
 #[derive(Default)]
 pub struct Running {
     child: Arc<Mutex<Option<Child>>>,
@@ -357,7 +368,101 @@ fn emit_line(app: &AppHandle, raw: &str) {
     let _ = app.emit("progress", Progress::line(line));
 }
 
-fn validate_request(url: &str, mode: &str, quality: &str, folder: &str) -> Result<(), String> {
+fn inspect_url_sync(app: &AppHandle, url: &str) -> Result<MediaInfo, String> {
+    let parsed = reqwest::Url::parse(url).map_err(|_| "Paste a valid YouTube link.")?;
+    if !matches!(parsed.scheme(), "http" | "https") || parsed.host_str().is_none() {
+        return Err("Only http and https links can be inspected.".into());
+    }
+
+    let ytdlp =
+        resolve(app, "yt-dlp").ok_or("Set up the download engine before reading video details.")?;
+    let output = base_command(&ytdlp)
+        .args([
+            "--ignore-config",
+            "--dump-single-json",
+            "--no-warnings",
+            "--no-playlist",
+            "--",
+        ])
+        .arg(url)
+        .output()
+        .map_err(|error| format!("Could not read this link: {error}"))?;
+    if !output.status.success() {
+        let message = String::from_utf8_lossy(&output.stderr);
+        return Err(message
+            .lines()
+            .find(|line| !line.trim().is_empty())
+            .unwrap_or("Could not read this YouTube link.")
+            .to_string());
+    }
+
+    let value: serde_json::Value = serde_json::from_slice(&output.stdout)
+        .map_err(|_| "The download engine returned unreadable video details.".to_string())?;
+    let mut heights: Vec<u32> = value
+        .get("formats")
+        .and_then(|formats| formats.as_array())
+        .into_iter()
+        .flatten()
+        .filter_map(|format| {
+            format
+                .get("height")
+                .and_then(|height| height.as_u64())
+                .map(|height| height as u32)
+        })
+        .collect();
+    heights.sort_unstable();
+    heights.dedup();
+    let canonical = [240_u32, 360, 480, 720, 1080];
+    let available_heights = canonical
+        .into_iter()
+        .filter(|height| heights.iter().any(|found| found >= height))
+        .collect();
+    let is_playlist = parsed
+        .query_pairs()
+        .any(|(key, value)| key == "list" && !value.is_empty())
+        || parsed.path().contains("playlist");
+
+    Ok(MediaInfo {
+        title: value
+            .get("title")
+            .and_then(|item| item.as_str())
+            .unwrap_or("Untitled video")
+            .to_string(),
+        channel: value
+            .get("channel")
+            .or_else(|| value.get("uploader"))
+            .and_then(|item| item.as_str())
+            .unwrap_or("YouTube")
+            .to_string(),
+        duration: value
+            .get("duration")
+            .and_then(|item| item.as_f64())
+            .unwrap_or(0.0)
+            .max(0.0) as u64,
+        thumbnail: value
+            .get("thumbnail")
+            .and_then(|item| item.as_str())
+            .unwrap_or_default()
+            .to_string(),
+        is_playlist,
+        available_heights,
+    })
+}
+
+#[tauri::command]
+async fn inspect_url(app: AppHandle, url: String) -> Result<MediaInfo, String> {
+    tauri::async_runtime::spawn_blocking(move || inspect_url_sync(&app, &url))
+        .await
+        .map_err(|error| format!("Video inspection failed: {error}"))?
+}
+
+fn validate_request(
+    url: &str,
+    mode: &str,
+    quality: &str,
+    audio_format: &str,
+    folder: &str,
+) -> Result<(), String> {
     let parsed = reqwest::Url::parse(url).map_err(|_| "Paste a valid video or playlist link.")?;
     if !matches!(parsed.scheme(), "http" | "https") || parsed.host_str().is_none() {
         return Err("Only http and https links can be downloaded.".into());
@@ -366,15 +471,18 @@ fn validate_request(url: &str, mode: &str, quality: &str, folder: &str) -> Resul
         return Err("Choose audio or video format.".into());
     }
     let allowed = if mode == "audio" {
-        matches!(quality, "0" | "5" | "9")
+        matches!(quality, "best" | "320" | "256" | "192" | "128")
     } else {
-        matches!(quality, "2160" | "1080" | "720" | "480")
+        matches!(quality, "best" | "1080" | "720" | "480" | "360" | "240")
     };
     if !allowed {
         return Err("Choose one of the available quality options.".into());
     }
     if folder.trim().is_empty() {
         return Err("Choose a download folder.".into());
+    }
+    if mode == "audio" && !matches!(audio_format, "mp3" | "m4a" | "wav" | "opus") {
+        return Err("Choose one of the available audio formats.".into());
     }
     Ok(())
 }
@@ -386,9 +494,10 @@ fn start_download(
     url: String,
     mode: String,
     quality: String,
+    audio_format: String,
     folder: String,
 ) -> Result<(), String> {
-    validate_request(&url, &mode, &quality, &folder)?;
+    validate_request(&url, &mode, &quality, &audio_format, &folder)?;
     if state
         .child
         .lock()
@@ -436,18 +545,22 @@ fn start_download(
     }
 
     if audio {
+        let audio_quality = match quality.as_str() {
+            "best" => "0".to_string(),
+            bitrate => format!("{bitrate}K"),
+        };
         command
             .arg("--extract-audio")
-            .args(["--audio-format", "mp3"])
-            .args(["--audio-quality", &quality]);
+            .args(["--audio-format", &audio_format])
+            .args(["--audio-quality", &audio_quality]);
     } else {
+        let format_selector = if quality == "best" {
+            "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best".to_string()
+        } else {
+            format!("bestvideo[height<={quality}][ext=mp4]+bestaudio[ext=m4a]/best[height<={quality}][ext=mp4]/best[height<={quality}]")
+        };
         command
-            .args([
-                "--format",
-                &format!(
-                    "bestvideo[height<={quality}][ext=mp4]+bestaudio[ext=m4a]/best[height<={quality}][ext=mp4]/best[height<={quality}]"
-                ),
-            ])
+            .args(["--format", &format_selector])
             .args(["--merge-output-format", "mp4"]);
     }
 
@@ -566,6 +679,7 @@ pub fn run() {
             check_tools,
             default_folder,
             setup_tools,
+            inspect_url,
             start_download,
             cancel_download
         ])

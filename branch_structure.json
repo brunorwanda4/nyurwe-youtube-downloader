@@ -1,0 +1,18 @@
+{
+  "default_branch": "main",
+  "branches": [
+    "main",
+    "origin",
+    "refactor/page-components"
+  ],
+  "parent": {
+    "main": null,
+    "origin": "main",
+    "refactor/page-components": "main"
+  },
+  "order": [
+    "main",
+    "origin",
+    "refactor/page-components"
+  ]
+}

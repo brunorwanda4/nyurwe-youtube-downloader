@@ -1,33 +1,25 @@
 "use client";
 
-import { YoutubeLogo } from "@phosphor-icons/react";
-import { Botanicals } from "./botanicals";
+import { Download, Home, ListVideo, Settings, TreePine } from "lucide-react";
 import { NAV_ITEMS } from "@/src/lib/constants";
 import { View } from "@/src/lib/types";
 
-type ForestNavProps = {
-  activeView: View;
-  onSelect: (view: View) => void;
-};
+const icons = { home: Home, downloads: Download, playlists: ListVideo, settings: Settings };
 
-export function ForestNav({ activeView, onSelect }: ForestNavProps) {
+export function ForestNav({ activeView, onSelect }: { activeView: View; onSelect: (view: View) => void }) {
   return (
-    <nav className="bark-nav" aria-label="Main navigation">
-      <YoutubeLogo className="nav-youtube" size={26} weight="fill" aria-hidden="true" />
-      <div className="nav-items">
-        {NAV_ITEMS.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            className={activeView === item.id ? "active" : ""}
-            aria-current={activeView === item.id ? "page" : undefined}
-            onClick={() => onSelect(item.id)}
-          >
-            {item.label}
-          </button>
-        ))}
-      </div>
-      <Botanicals className="nav-botanicals" />
-    </nav>
+    <aside className="forest-sidebar">
+      <button className="brand-lockup" type="button" onClick={() => onSelect("home")} aria-label="Forest Download home">
+        <span className="brand-mark"><TreePine size={28} strokeWidth={1.7} /></span>
+        <span><strong>Forest</strong><small>Download</small></span>
+      </button>
+      <ul className="menu menu-md sidebar-menu" aria-label="Main navigation">
+        {NAV_ITEMS.map((item) => {
+          const Icon = icons[item.id];
+          return <li key={item.id}><button className={activeView === item.id ? "menu-active" : ""} type="button" onClick={() => onSelect(item.id)}><Icon size={19} strokeWidth={1.8} /><span>{item.label}</span></button></li>;
+        })}
+      </ul>
+      <div className="sidebar-status"><span className="status status-success" /><span><strong>Private & local</strong><small>Nothing is uploaded</small></span></div>
+    </aside>
   );
 }
