@@ -4,9 +4,7 @@ import { Scene } from "@/src/components/scene";
 import { StartupScreen } from "@/src/components/startup-screen";
 import { ForestNav } from "@/src/components/forest-nav";
 import { DownloadCard } from "@/src/components/download-card";
-import { PreviewCard } from "@/src/components/preview-card";
 import { ProgressPanel } from "@/src/components/progress-panel";
-import { StatusPanel } from "@/src/components/status-panel";
 import { HistoryView } from "@/src/components/history-view";
 import { SettingsView } from "@/src/components/settings-view";
 import { ForestFooter } from "@/src/components/forest-footer";
@@ -50,16 +48,10 @@ export default function Home() {
                 onStop={app.stop}
               />
 
-              <PreviewCard
-                previewState={app.previewState}
-                running={app.running}
-                selectedFormat={app.selectedFormat}
-                onSelectFormat={app.setSelectedFormat}
-              />
-
               {(app.status !== "idle" || app.log.length > 0) && (
                 <ProgressPanel
                   status={app.status}
+                  running={app.running}
                   desktop={app.desktop}
                   folder={app.folder}
                   current={app.current}
@@ -71,15 +63,6 @@ export default function Home() {
                 />
               )}
             </div>
-
-            <StatusPanel
-              status={app.status}
-              running={app.running}
-              statusHeading={app.statusHeading}
-              progressLabel={app.progressLabel}
-              current={app.current}
-              percent={app.percent}
-            />
           </div>
         ) : app.activeView === "history" ? (
           <HistoryView status={app.status} format={app.format} onReturn={() => app.setActiveView("download")} />

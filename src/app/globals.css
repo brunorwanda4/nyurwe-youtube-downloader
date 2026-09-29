@@ -40,10 +40,10 @@ button:focus-visible, input:focus-visible, summary:focus-visible { outline: 3px 
 .nav-items button.active { color: var(--ink); background-color: rgba(230, 231, 216, .96); background-image: url("/assets/sage-stone-texture.png"); background-size: 270px; box-shadow: inset 0 1px rgba(255, 255, 255, .75), 0 4px 10px rgba(0, 0, 0, .25); }
 .nav-botanicals { position: absolute !important; z-index: 1; left: -3%; bottom: -20px; width: 106%; height: 48px; object-fit: cover; object-position: center 72%; pointer-events: none; opacity: .72; filter: saturate(.75) brightness(.72); animation: leaves-breathe 7s ease-in-out infinite; }
 
-.forest-workspace { flex: 1; display: grid; grid-template-columns: minmax(440px, 680px) minmax(210px, 300px); justify-content: center; gap: clamp(22px, 3vw, 46px); align-items: center; padding: 26px 0 20px; }
+.forest-workspace { flex: 1; display: grid; grid-template-columns: minmax(0, 680px); justify-content: center; align-items: center; padding: 26px 0 20px; }
 .hero-kicker { display: inline-flex; align-items: center; gap: 7px; color: #d0e18e; font-size: .65rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
 
-.download-column { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.download-column { display: flex; width: 100%; flex-direction: column; gap: 12px; min-width: 0; }
 .stone-card { position: relative; color: var(--ink); background-color: var(--stone); background-image: url("/assets/sage-stone-texture.png"); background-size: cover; border: 1px solid rgba(245, 248, 227, .75); box-shadow: 0 23px 58px rgba(0, 0, 0, .33), inset 0 1px rgba(255, 255, 255, .8), inset 0 -2px rgba(70, 78, 58, .14); transition: transform .25s ease, box-shadow .25s ease; }
 .stone-card:hover { transform: translateY(-3px); box-shadow: 0 28px 65px rgba(0, 0, 0, .37), inset 0 1px rgba(255, 255, 255, .8), inset 0 -2px rgba(70, 78, 58, .14); }
 .download-stone { padding: 27px 30px 26px; overflow: hidden; border-radius: 36px 28px 42px 31px / 31px 43px 27px 38px; }
@@ -86,49 +86,21 @@ button:focus-visible, input:focus-visible, summary:focus-visible { outline: 3px 
 .top-growth { top: -85px; left: -64px; transform: rotate(10deg); opacity: .65; }
 .bottom-growth { right: -62px; bottom: -93px; transform: rotate(-7deg); opacity: .8; animation: leaves-breathe 6s ease-in-out infinite reverse; }
 
-.preview-stone { min-height: 178px; display: grid; grid-template-columns: 40% 60%; gap: 0; overflow: hidden; padding: 14px; border-radius: 29px 41px 27px 38px / 37px 26px 43px 29px; }
-.thumbnail-wrap { position: relative; min-height: 150px; overflow: hidden; border: 1px solid rgba(42, 60, 36, .28); border-radius: 23px 18px 27px 20px; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .3); }
-.thumbnail-wrap img { object-fit: cover; }
-.duration { position: absolute; right: 8px; bottom: 8px; padding: 4px 7px; border-radius: 10px; color: #fff; background: rgba(6, 14, 9, .82); font-size: .59rem; font-weight: 800; }
-.preview-details { min-width: 0; padding: 7px 4px 4px 17px; }
-.preview-title { display: flex; align-items: flex-start; justify-content: space-between; gap: 9px; }
-.preview-title > svg { color: var(--youtube); }
-.preview-title span { color: #65705f; font-size: .55rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
-.preview-title h2 { margin: 4px 0 13px; font-size: clamp(.88rem, 1.2vw, 1.05rem); letter-spacing: -.025em; line-height: 1.15; }
-.format-stones { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; min-width: 0; margin: 0; padding: 0; border: 0; }
-.format-stones button { display: flex; min-width: 0; min-height: 62px; align-items: center; justify-content: center; gap: 5px; padding: 7px 5px; border: 1px solid rgba(61, 84, 51, .26); border-radius: 18px 14px 21px 15px / 16px 21px 14px 19px; color: #394536; background-color: rgba(224, 227, 211, .82); background-image: url("/assets/sage-stone-texture.png"); background-size: 220px; box-shadow: inset 0 1px rgba(255, 255, 255, .7), 0 3px 7px rgba(33, 43, 29, .12); cursor: pointer; transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease; }
-.format-stones button:hover:not(:disabled) { transform: translateY(-2px); border-color: #5d793f; }
-.format-stones button.selected { border-color: var(--youtube); box-shadow: 0 0 0 2px rgba(200, 22, 32, .18), inset 0 -3px #6f8b46, inset 0 1px rgba(255, 255, 255, .75); }
-.format-stones button > svg { flex: none; color: #5c773d; }
-.format-stones button.selected > svg { color: var(--youtube); }
-.format-stones button span { display: flex; min-width: 0; flex-direction: column; text-align: left; }
-.format-stones strong { font-size: .62rem; }
-.format-stones small { color: #5c6558; font-size: .57rem; }
-.preview-botanicals { position: absolute !important; z-index: 2; right: -82px; bottom: -104px; width: 290px; height: 160px; object-fit: cover; pointer-events: none; opacity: .68; filter: saturate(.82) brightness(.78); }
-.preview-loading { grid-column: 1 / -1; display: flex; min-height: 148px; align-items: center; justify-content: center; flex-direction: column; gap: 7px; color: #52604c; }
-.preview-loading strong { margin-top: 3px; font-size: .8rem; }
-.preview-loading span { font-size: .62rem; }
-
-.status-stone { align-self: center; min-height: 318px; overflow: hidden; padding: 34px 23px 29px; border-radius: 54px 43px 58px 46px / 43px 59px 45px 62px; text-align: center; }
-.status-stone:hover { transform: translateY(-3px) rotate(.35deg); }
-.status-eyebrow { color: #6b7666; font-size: .54rem; font-weight: 850; letter-spacing: .13em; text-transform: uppercase; }
-.status-stone h2 { max-width: 175px; margin: 8px auto 25px; font-size: clamp(.98rem, 1.3vw, 1.2rem); letter-spacing: -.025em; }
-.download-orb { display: grid; width: 116px; height: 116px; margin: 0 auto 17px; place-items: center; border: 1px solid rgba(57, 72, 51, .36); border-radius: 47% 53% 49% 51% / 54% 45% 55% 46%; color: #9f121b; background-color: rgba(228, 230, 217, .78); background-image: url("/assets/sage-stone-texture.png"); background-size: 300px; box-shadow: 0 9px 18px rgba(35, 45, 31, .17), inset 0 1px rgba(255, 255, 255, .8); }
-.status-stone.running .download-orb { color: #4d7133; }
-.status-stone.success .download-orb { color: #4d7e37; }
-.status-stone.error .download-orb { color: var(--youtube); }
-.status-stone > strong { font-size: .82rem; }
-.status-stone > p { min-height: 30px; margin: 8px auto 0; color: #66705f; font-size: .58rem; line-height: 1.45; }
-.status-progress { display: block; height: 4px; margin: 14px 10px 0; overflow: hidden; border-radius: 99px; background: rgba(66, 84, 54, .16); }
-.status-progress i { display: block; height: 100%; border-radius: inherit; background: #688e3f; transition: width .3s ease; }
-.status-growth { position: absolute !important; z-index: 2; left: -28%; bottom: -82px; width: 156%; height: 170px; object-fit: cover; pointer-events: none; filter: saturate(.9) brightness(.78); animation: leaves-breathe 6.5s ease-in-out infinite; }
-
-.technical-stone { padding: 10px 17px; border: 1px solid rgba(230, 238, 210, .24); border-radius: 16px 20px 14px 19px; color: rgba(247, 249, 240, .88); background: rgba(8, 24, 15, .72); box-shadow: 0 12px 28px rgba(0, 0, 0, .2); backdrop-filter: blur(14px); }
-.technical-stone > div { display: flex; justify-content: space-between; gap: 15px; font-size: .62rem; }
-.technical-stone strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.technical-stone > button { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; padding: 0; border: 0; color: #cfdf91; background: transparent; font-size: .6rem; font-weight: 800; cursor: pointer; }
-.thin-progress { display: block; height: 3px; margin-top: 8px; overflow: hidden; border-radius: 99px; background: rgba(255, 255, 255, .12); }
-.thin-progress i { display: block; height: 100%; background: #a9c75d; transition: width .3s ease; }
+.technical-stone { position: relative; isolation: isolate; overflow: hidden; padding: 18px 20px 16px; border: 1px solid rgba(230, 238, 210, .24); border-radius: 22px 28px 20px 26px; color: rgba(247, 249, 240, .92); background: rgba(8, 24, 15, .68); box-shadow: 0 16px 38px rgba(0, 0, 0, .24), inset 0 1px rgba(255, 255, 255, .1); -webkit-backdrop-filter: blur(18px) saturate(135%); backdrop-filter: blur(18px) saturate(135%); }
+.technical-stone > :not(.status-growth) { position: relative; z-index: 2; }
+.progress-summary { display: grid; grid-template-columns: 72px minmax(0, 1fr); align-items: center; gap: 16px; }
+.download-orb { display: grid; width: 72px; height: 72px; place-items: center; border: 1px solid rgba(225, 242, 211, .25); border-radius: 47% 53% 49% 51% / 54% 45% 55% 46%; color: #d7eca2; background: rgba(223, 235, 211, .12); box-shadow: inset 0 1px rgba(255, 255, 255, .18), 0 8px 18px rgba(0, 0, 0, .18); }
+.progress-panel.success .download-orb { color: #b9e58d; }
+.progress-panel.error .download-orb { color: #ffaca8; }
+.progress-copy { min-width: 0; }
+.status-eyebrow { color: rgba(217, 235, 198, .56); font-size: .54rem; font-weight: 850; letter-spacing: .13em; text-transform: uppercase; }
+.progress-copy h2 { margin: 3px 0 7px; color: #f4f7ef; font-size: clamp(.92rem, 1.5vw, 1.12rem); letter-spacing: -.025em; }
+.progress-copy strong { display: block; overflow: hidden; color: #d8e9b3; font-size: .7rem; text-overflow: ellipsis; white-space: nowrap; }
+.progress-copy p { margin: 3px 0 0; overflow: hidden; color: rgba(240, 246, 235, .62); font-size: .6rem; line-height: 1.45; text-overflow: ellipsis; white-space: nowrap; }
+.status-progress { display: block; height: 4px; margin-top: 14px; overflow: hidden; border-radius: 99px; background: rgba(255, 255, 255, .12); }
+.status-progress i { display: block; height: 100%; border-radius: inherit; background: #a9c75d; transition: width .3s ease; }
+.status-growth { position: absolute !important; z-index: 1; right: -80px; bottom: -104px; width: 290px; height: 160px; object-fit: cover; pointer-events: none; opacity: .28; filter: saturate(.8) brightness(.68); animation: leaves-breathe 6.5s ease-in-out infinite; }
+.technical-stone > button { display: inline-flex; align-items: center; gap: 6px; min-height: 30px; margin-top: 8px; padding: 0 8px; border: 0; color: #cfdf91; background: transparent; font-size: .6rem; font-weight: 800; cursor: pointer; }
 .technical-stone details { margin-top: 7px; color: rgba(240, 244, 233, .6); font-size: .58rem; }
 .technical-stone summary { cursor: pointer; }
 .forest-log { max-height: 90px; margin-top: 7px; overflow: auto; padding: 7px 9px; border-radius: 9px; background: rgba(0, 0, 0, .2); font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
@@ -171,11 +143,6 @@ button:focus-visible, input:focus-visible, summary:focus-visible { outline: 3px 
 
 @media (max-width: 1060px) {
   .forest-app__content { padding-inline: 22px; }
-  .forest-workspace { grid-template-columns: minmax(420px, 1.38fr) minmax(180px, .62fr); }
-  .status-stone { min-height: 240px; padding: 25px 18px; }
-  .download-orb { width: 88px; height: 88px; }
-  .download-orb svg { width: 44px; }
-  .status-stone h2 { margin-bottom: 15px; }
 }
 @media (max-width: 760px) {
   .forest-app__content { padding: 16px 14px 12px; }
@@ -183,17 +150,15 @@ button:focus-visible, input:focus-visible, summary:focus-visible { outline: 3px 
   .nav-items button { min-width: auto; height: 39px; padding: 0 13px; font-size: .7rem; }
   .nav-youtube { width: 22px; margin-right: 5px; }
   .forest-workspace { grid-template-columns: 1fr; gap: 20px; padding-top: 36px; }
-  .status-stone { grid-column: auto; grid-row: auto; width: min(360px, 92vw); min-height: 270px; margin: 0 auto; }
   .forest-footer { margin-top: 18px; }
 }
 @media (max-width: 520px) {
   .nav-items button { padding: 0 9px; }
   .download-stone { padding: 23px 17px 20px; }
   .engine-chip { position: static; width: max-content; margin: -5px auto 12px; }
-  .preview-stone { grid-template-columns: 1fr; }
-  .thumbnail-wrap { min-height: 190px; }
-  .preview-details { padding: 13px 4px 6px; }
-  .format-stones button { min-height: 58px; }
+  .progress-summary { grid-template-columns: 58px minmax(0, 1fr); gap: 12px; }
+  .download-orb { width: 58px; height: 58px; }
+  .download-orb svg { width: 30px; }
   .download-utilities { align-items: flex-start; flex-direction: column; }
   .forest-footer { align-items: center; flex-direction: column; padding-bottom: 8px; }
 }
