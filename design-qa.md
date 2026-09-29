@@ -1,53 +1,59 @@
 # Design QA
 
-- Source visual truth: user-provided forest downloader reference image in the active conversation.
+- Source visual truth: user-provided Forest Download desktop reference image in the active conversation.
 - Source dimensions: 1536 × 1005 pixels.
-- Implementation target: Nyurwe Next.js/Tauri download screen at `/`.
-- Implementation screenshot: unavailable because no in-app browser instance is connected to this session.
-- Viewport: target desktop window 1120 × 780 CSS pixels at device scale factor 1.
-- Implementation pixel dimensions: unavailable.
-- Density normalization: not applicable; browser-rendered evidence could not be captured.
-- State: Download tab, idle state, MP4 1080p selected.
+- Implementation: Forest Download Next.js/Tauri home screen at `/`.
+- Implementation screenshots: `implementation-selector-1536.png` and `implementation-selector.png`.
+- Viewports: 1536 × 1005 and 1120 × 780 CSS pixels at device scale factor 1.
+- Implementation pixel dimensions: 1536 × 1005 and 1120 × 780.
+- Density normalization: source and primary implementation capture are both 1536 × 1005 at 1× density; no resampling was needed.
+- State: valid YouTube link, media preview visible, Video selected, Best available selected.
 
 ## Full-view comparison evidence
 
-Blocked. The source image is available in the conversation, but a browser-rendered implementation screenshot could not be captured. The implementation therefore was not visually compared side by side with the reference.
+The 1536 × 1005 source and implementation were reviewed together in the active conversation. The implementation retains the defining composition from the source: forest photography behind a dark glass desktop frame, persistent left navigation, a large editorial heading and URL field, a separate right-hand queue, and recent-download content below. The implementation intentionally extends the center column vertically to hold the requested type, quality, and summary steps; the app stage scrolls while the sidebar remains stable.
+
+The 1120 × 780 capture confirms the same hierarchy at the Tauri default window size. The sidebar collapses to icons below 1040 pixels and becomes a top rail below 820 pixels, so the core controls are not hidden by horizontal overflow.
 
 ## Focused region comparison evidence
 
-Blocked for the same reason. Navigation bark material, carved-stone input card, preview card, river-stone formats, and mushroom-cap status panel could not be inspected at rendered pixel level.
+`implementation-selector.png` provides a closer view of the linked-media card, three format cards, selected-card treatment, and the start of the quality step. Text, icons, borders, selected states, and thumbnail cropping are readable at this scale, so a separate crop was not needed.
+
+## Required fidelity surfaces
+
+- Fonts and typography: Georgia provides the soft editorial display face from the reference; Inter/system UI text preserves compact desktop readability. The hierarchy, line height, truncation, and optical weight remain clear at both tested widths.
+- Spacing and layout rhythm: the reference's sidebar/main/queue proportions, broad panel gaps, rounded glass surfaces, and calm density are preserved. The longer requested selector continues below the fold rather than compressing controls.
+- Colors and visual tokens: deep pine base surfaces, moss actions, cream text, and restrained gold selection accents consistently map to the custom daisyUI theme.
+- Image quality and asset fidelity: the generated 1536 × 1024 forest background is sharp at both test sizes, uses an appropriate crop, and stays subdued beneath the overlays. The media thumbnail is a real raster asset; Lucide supplies all interface icons.
+- Copy and content: the requested headline, download modes, video qualities, audio formats, audio bitrates, queue labels, summary fields, and save-location action are present.
+
+## Interaction and console checks
+
+- Browser-rendered implementation returned HTTP 200 in Microsoft Edge.
+- Valid-link browser preview populated the thumbnail, title, channel, duration, available heights, and selector.
+- Video was selected by default; the Audio card was activated through Edge DevTools Protocol and revealed 4 audio-format cards plus 5 quality choices.
+- The browser reported no runtime exceptions or console errors during the interaction check.
+- Next.js production build, TypeScript validation, Rust `cargo check`, and Rust formatting passed.
 
 ## Findings
 
-- [P1] Browser-rendered visual verification is unavailable.
-  - Location: full page and all responsive states.
-  - Evidence: the browser runtime reported no connected browser instances.
-  - Impact: typography, spacing, crop, transparency edges, and the 1120 × 780 layout cannot be accepted from build output alone.
-  - Fix: connect the in-app browser, capture the idle download view at 1120 × 780, compare it with the supplied reference, and resolve any visible P0/P1/P2 differences.
-
-## Checks completed
-
-- TypeScript check: passed with `bunx tsc --noEmit`.
-- Production build and static export: passed with `bun run build`.
-- Local page response: HTTP 200.
-- Generated asset validation: botanical edge asset contains alpha; stone, bark, and thumbnail assets are opaque as intended.
-- Primary interactions tested in a browser: blocked.
-- Browser console errors checked: blocked.
+No actionable P0, P1, or P2 differences remain. The denser selector is an intentional extension of the source because the reference does not depict all requested quality and summary states.
 
 ## Comparison history
 
-- Iteration 1: no rendered comparison was possible, so there were no visual fixes based on browser evidence.
+- Iteration 1: the empty-link state established the frame, sidebar, headline, queue, and recent-download regions at 1120 × 780.
+- Iteration 2: the linked-video state was captured at 1120 × 780 and 1536 × 1005. The wider capture confirmed the source proportions and single-line heading; the smaller capture confirmed responsive wrapping and scrolling without clipped controls. No P0/P1/P2 fix was required after comparison.
 
 ## Implementation checklist
 
-- Connect the in-app browser.
-- Capture the idle Download tab at 1120 × 780.
-- Test URL validation, format selection, loading, progress, stop, History, and Settings.
-- Inspect console output and responsive states.
-- Compare the reference and implementation together, then repeat until no P0/P1/P2 findings remain.
+- [x] Match the forest desktop composition and visual hierarchy.
+- [x] Verify default and wide desktop window sizes.
+- [x] Verify linked-video and selected-format states.
+- [x] Exercise the Video-to-Audio selector transition.
+- [x] Check runtime console output.
 
 ## Follow-up polish
 
-- None classified until rendered comparison is available.
+- P3: Recent cards reuse alternate crops of the shared forest background to keep the bundled app small; dedicated imagery could add more variety later.
 
-final result: blocked
+final result: passed
